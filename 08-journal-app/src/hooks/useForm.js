@@ -41,9 +41,9 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
         for (const formField of Object.keys(formValidations)) {
             
             
-            const [fn, erroMessage = 'Error de validacion'] = formValidations[formField];
+            const [fn, errorMessage = 'Error de validacion'] = formValidations[formField];
 
-            formCheckedValues[`${formField}Valid`] = fn(formState[formField]) ? null : erroMessage
+            formCheckedValues[`${formField}Valid`] = fn(formState[formField]) ? null : errorMessage
 
         }
         setFormValidation(formCheckedValues);
