@@ -1,8 +1,16 @@
+import { collection, doc, setDoc } from "firebase/firestore/lite";
+import { FirebaseDB } from "../../firebase/config";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from "./";
+import { loadNotes } from "../../helpers";
+import { Notes } from "@mui/icons-material";
+
 export const starNewNote = () => {
   return async (dispatch, getState) => {
+
+    dispatch(savingNewNote())
     // uid
     const {uid} = getState().auth;
-
+    
     
 
     const newNote = {
@@ -11,9 +19,25 @@ export const starNewNote = () => {
       date: new Date().getTime(),
     }
 
-    // dispatch
+    const newDoc = doc (collection(FirebaseDB, `${uid}/journal/notes`));
+    const setDocResp = await setDoc(newDoc, newNote)
 
+    newNote.id = newDoc.id
+
+    dispatch( addNewEmptyNote(newNote))
+    dispatch( setActiveNote(newNote))
+     
     // dispatch (new Note)
     // dispatch (activeNote)
   }
+}
+
+export const startLoadingNotes = () => {
+  return async (dispatch, getState) => {
+    const {uid} = getState().auth;
+
+    const notes = await loadNotes(uid);
+    dispatch(setNotes(notes))
+  }
+
 }
